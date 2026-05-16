@@ -26,16 +26,18 @@ dec = (demod[::fs // br] > 0.25).astype(int)
 
 signals = [msg, car, ask]
 titles = ['Message', 'Carrier', 'ASK Signal']
+colors = ['blue', 'green', 'red']
 
 plt.figure(figsize=(10, 8))
+
 for i in range(3):
     plt.subplot(4, 1, i + 1)
-    plt.plot(t, signals[i])
+    plt.plot(t, signals[i], color=colors[i])
     plt.title(titles[i])
     plt.grid()
 
 plt.subplot(4, 1, 4)
-plt.step(range(len(dec)), dec, where='mid')
+plt.step(range(len(dec)), dec, where='mid', color='magenta')
 plt.title("Decoded Bits")
 plt.grid()
 
@@ -91,7 +93,7 @@ plt.show()
 ```
 # Output Waveform
 # ASK
-<img width="1111" height="767" alt="image" src="https://github.com/user-attachments/assets/742d8d27-e6a0-463f-bac0-46ed35fc2fc8" />
+<img width="989" height="790" alt="image" src="https://github.com/user-attachments/assets/af9dd80f-2ff6-4d58-8d1f-1d20c8557890" />
 
 
 # FSK
