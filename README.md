@@ -13,36 +13,30 @@ from scipy.signal import butter, lfilter
 fs, fc, br, T = 1000, 50, 10, 1
 t = np.linspace(0, T, fs, endpoint=False)
 
-bits = np.random.randint(0, 2, br)
-msg = np.repeat(bits, fs // br)
+b = np.random.randint(0, 2, br)
+m = np.repeat(b, fs // br)
+c = np.sin(2 * np.pi * fc * t)
+a = m * c
 
-car = np.sin(2 * np.pi * fc * t)
-ask = msg * car
+d = lfilter(*butter(5, fc/(fs/2), 'low'), a * c)
+r = (d[::fs//br] > 0.25).astype(int)
 
-b, a = butter(5, fc / (0.5 * fs), btype='low')
-demod = lfilter(b, a, ask * car)
-
-dec = (demod[::fs // br] > 0.25).astype(int)
-
-signals = [msg, car, ask]
-titles = ['Message', 'Carrier', 'ASK Signal']
-colors = ['blue', 'green', 'red']
-
-plt.figure(figsize=(10, 8))
-
-for i in range(3):
-    plt.subplot(4, 1, i + 1)
-    plt.plot(t, signals[i], color=colors[i])
-    plt.title(titles[i])
+for i, (s, ttl, clr) in enumerate(zip([m, c, a],
+                                      ['Message', 'Carrier', 'ASK Signal'],
+                                      ['b', 'g', 'r']), 1):
+    plt.subplot(4, 1, i)
+    plt.plot(t, s, clr)
+    plt.title(ttl)
     plt.grid()
 
 plt.subplot(4, 1, 4)
-plt.step(range(len(dec)), dec, where='mid', color='magenta')
-plt.title("Decoded Bits")
+plt.step(range(len(r)), r, where='mid', color='m')
+plt.title('Decoded Bits')
 plt.grid()
 
 plt.tight_layout()
 plt.show()
+
 ```
 # FSK
 ```py
